@@ -18,11 +18,12 @@ jobs:
           git config --global user.email 'actions@github.com'
           
       - name: Debug Repository Information
-        run: echo "Repository:" ${{ github.repository }}
+        run: |
+          echo "Repository:" ${{ github.repository }}
+          echo "GitHub Token:" ${{ secrets.GITHUB_TOKEN }}
 
       - name: Create Pull Request
         run: |
-         
           # Create a pull request
           curl \
             -X POST \
