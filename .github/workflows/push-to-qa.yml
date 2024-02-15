@@ -18,7 +18,11 @@ jobs:
             const body = "Please pull these awesome changes in!";
             const head = "development_branch";
             const base = "qa_branch";
-            const { data: pullRequest } = await github.pulls.create({
+            
+            const { context, github } = require('@actions/github');
+            const octokit = new github.GitHub(process.env.GITHUB_TOKEN);
+
+            const pullRequest = await octokit.pulls.create({
               owner: context.repo.owner,
               repo: context.repo.repo,
               title: title,
@@ -26,4 +30,4 @@ jobs:
               head: head,
               base: base
             });
-            console.log("Pull request created:", pullRequest.html_url);
+            console.log("Pull request created:", pullRequest.data.html_url);
