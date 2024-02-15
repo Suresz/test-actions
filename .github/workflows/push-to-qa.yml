@@ -24,8 +24,16 @@ jobs:
         run: |
          
           # Create a pull request
-          curl \
+          #curl \
+            #-X POST \
+            #-H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
+           # -d '{ "title": "Pull Request Title", "body": "Pull Request Description", "head": "qa-branch", "base": "development_branch" }' \
+           # https://api.github.com/repos/${{ github.repository }}/pulls
+
+          curl -L \
             -X POST \
-            -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
+            -H "Accept: application/vnd.github+json" \
+            -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
+            -H "X-GitHub-Api-Version: 2022-11-28" \
             -d '{ "title": "Pull Request Title", "body": "Pull Request Description", "head": "qa-branch", "base": "development_branch" }' \
             https://api.github.com/repos/${{ github.repository }}/pulls
