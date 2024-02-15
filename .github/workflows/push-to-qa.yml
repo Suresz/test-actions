@@ -9,8 +9,16 @@ jobs:
   create-pull-request:
     runs-on: ubuntu-latest
     steps:
-      - name: Install dependencies
-        run: npm install @actions/github
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set up Git
+        run: |
+          git config --global user.name 'GitHub Actions'
+          git config --global user.email 'actions@github.com'
+
+      - name: Debug Repository Information
+        run: echo "Repository:" ${{ github.repository }}
 
       - name: Create Pull Request
         uses: actions/github-script@v5
@@ -22,10 +30,9 @@ jobs:
             const head = "development_branch";
             const base = "qa_branch";
 
-            // Use a different name for the variable from '@actions/github'
             const { context: githubContext } = require('@actions/github');
 
-            const pullRequest = await githubContext.issues.create({
+            const pullRequest = await githubContext.pulls.create({
               owner: context.repo.owner,
               repo: context.repo.repo,
               title: title,
