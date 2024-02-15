@@ -12,23 +12,26 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
-      - name: Set up Git
+      - name: Set Git Config (optional)
         run: |
           git config --global user.name 'GitHub Actions'
           git config --global user.email 'actions@github.com'
 
-      - name: Debug Repository Information
-        run: echo "Repository:" ${{ github.repository }}
+      - name: Fetch updates (optional)
+        run: git fetch origin -p  # Ensure we have latest development_branch
+
+      - name: Install "@actions/github"
+        run: npm install @actions/github
 
       - name: Create Pull Request
         uses: actions/github-script@v5
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
-            const title = "Amazing new feature";
-            const body = "Please pull these awesome changes in!";
-            const head = "development_branch";
-            const base = "qa_branch";
+            const title = "Amazing new feature"; // Replace with desired title
+            const body = "Please pull these awesome changes in!"; // Replace with desired description
+            const head = "development_branch"; // Replace with actual branch to merge from
+            const base = "qa_branch"; // Replace with actual branch to merge into
 
             const { context: githubContext } = require('@actions/github');
 
