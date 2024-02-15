@@ -12,36 +12,20 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
-      - name: Set Git Config (optional)
+      - name: Set up Git
         run: |
           git config --global user.name 'GitHub Actions'
           git config --global user.email 'actions@github.com'
-
-      - name: Fetch updates (optional)
-        run: git fetch origin -p  # Ensure we have latest development_branch
-
-      - name: Install "@actions/github"
-        run: npm install @actions/github
+          
+      - name: Debug Repository Information
+        run: echo "Repository:" ${{ github.repository }}
 
       - name: Create Pull Request
-        uses: actions/github-script@v5
-        with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
-          script: |
-            const title = "Amazing new feature"; // Replace with desired title
-            const body = "Please pull these awesome changes in!"; // Replace with desired description
-            const head = "development_branch"; // Replace with actual branch to merge from
-            const base = "qa_branch"; // Replace with actual branch to merge into
-
-            const { context: githubContext } = require('@actions/github');
-
-            const pullRequest = await githubContext.pulls.create({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              title: title,
-              body: body,
-              head: head,
-              base: base
-            });
-
-            console.log("Pull request created:", pullRequest.data.html_url);
+        run: |
+         
+          # Create a pull request
+          curl \
+            -X POST \
+            -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
+            -d '{ "title": "Pull Request Title", "body": "Pull Request Description", "head": "qa-branch", "base": "development_branch" }' \
+            https://api.github.com/repos/${{ github.repository }}/pulls
