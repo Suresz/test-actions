@@ -19,12 +19,12 @@ jobs:
             const head = "development_branch";
             const base = "qa_branch";
             
-            const { github } = require('@actions/github');
-            const octokit = new github.GitHub(process.env.GITHUB_TOKEN);
+            const { github: gh } = require('@actions/github');
+            const octokit = new gh.GitHub(process.env.GITHUB_TOKEN);
 
             const pullRequest = await octokit.pulls.create({
-              owner: github.context.repo.owner,
-              repo: github.context.repo.repo,
+              owner: gh.context.repo.owner,
+              repo: gh.context.repo.repo,
               title: title,
               body: body,
               head: head,
