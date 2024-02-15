@@ -26,6 +26,6 @@ jobs:
           # Create a pull request
           curl \
             -X POST \
-            -H "Authorization: token ${{ secrets.TOKEN }}" \
+            -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
             -d '{ "title": "Pull Request Title", "body": "Pull Request Description", "head": "qa-branch", "base": "development_branch" }' \
             https://api.github.com/repos/${{ github.repository }}/pulls
