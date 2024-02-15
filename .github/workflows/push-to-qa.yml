@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - development_branch
+
 permissions:
   contents: write
 
@@ -21,9 +22,14 @@ jobs:
           git config --global user.name 'GitHub Actions'
           git config --global user.email 'actions@github.com'
 
-      - name: Push to qa_branch
+      - name: Create Pull Request
         run: |
           git fetch origin qa_branch
           git checkout qa_branch
           git merge origin/development_branch --no-edit --allow-unrelated-histories
           git push origin qa_branch
+          curl \
+            -X POST \
+            -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
+            -d '{ "title": "Update QA Branch", "head": "qa_branch", "base": "development_branch" }' \
+            https://api.github.com/repos/${{ github.repository }}/pulls
