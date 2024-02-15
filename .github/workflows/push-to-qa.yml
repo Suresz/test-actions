@@ -1,4 +1,4 @@
-name: Create Pull Request
+name: Continuous Integration - Create Pull Request to QA
 
 on:
   push:
@@ -16,16 +16,22 @@ jobs:
         run: |
           git config --global user.name 'GitHub Actions'
           git config --global user.email 'actions@github.com'
-          
-      - name: Debug Repository Information
-        run: echo "Repository:" ${{ github.repository }}
 
-      - name: Create Pull Request
+      - name: Create Pull Request to QA
         run: |
-         
+          # Checkout the qa_branch
+          git fetch origin qa_branch
+          git checkout -b qa_branch origin/qa_branch
+
+          # Merge changes from development_branch
+          git merge --no-ff --no-edit development_branch
+
+          # Push changes to qa_branch
+          git push origin qa_branch
+
           # Create a pull request
           curl \
             -X POST \
             -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
-            -d '{ "title": "Pull Request Title", "body": "Pull Request Description", "head": "qa-branch", "base": "development_branch" }' \
+            -d '{ "title": "Update QA Branch", "body": "Automatically created pull request from development to QA branch", "head": "qa_branch", "base": "qa_branch" }' \
             https://api.github.com/repos/${{ github.repository }}/pulls
